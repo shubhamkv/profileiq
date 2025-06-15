@@ -12,3 +12,22 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  id            String           @id @default(cuid())
+  name          String        
+  email         String           @unique
+  scores        GithubScore[]
+  createdAt     DateTime         @default(now())
+}
+
+model GithubScore {
+  id            String        @id @default(cuid())
+  userId        String
+  user          User          @relation(fields: [userId], references: [id])
+  score         Int
+  good          String[]
+  bad           String[]
+  insights      String[]
+  createdAt     DateTime      @default(now())
+}
