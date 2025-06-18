@@ -11,6 +11,7 @@ import {
   PieChart,
   ResponsiveContainer,
   Tooltip,
+  TooltipProps,
 } from "recharts";
 import {
   AlertCircle,
@@ -25,6 +26,7 @@ import {
   ShieldCheck,
   Star,
 } from "lucide-react";
+import Image from "next/image";
 
 export default function AnalyzePage() {
   const [formData, setFormData] = useState({
@@ -90,7 +92,7 @@ export default function AnalyzePage() {
         totalIssues: data.githubStats.totalIssues,
         topLanguages: data.githubStats.topLanguages,
       });
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error(err);
       setError("Something went wrong. Please try again.");
     } finally {
@@ -121,7 +123,7 @@ export default function AnalyzePage() {
 
   const COLORS = ["#06b6d4", "#3b82f6", "#6366f1", "#8b5cf6", "#a855f7"];
 
-  const CustomTooltip = ({ active, payload }: any) => {
+  const CustomTooltip = ({ active, payload }: TooltipProps<number, string>) => {
     if (active && payload && payload.length) {
       const data = payload[0].payload;
 
@@ -236,9 +238,11 @@ export default function AnalyzePage() {
                 <div className="flex flex-col sm:flex-row items-center sm:items-start gap-8">
                   <div className="flex-shrink-0 relative">
                     <div className="w-32 h-32 rounded-full bg-gradient-to-r from-cyan-400 to-indigo-400 p-1 transition-all duration-300 group-hover:scale-110">
-                      <img
+                      <Image
                         src={userData.avatar_url}
                         alt={userData.name || userData.login}
+                        width={128}
+                        height={128}
                         className="w-full h-full rounded-full object-cover border-4 border-white dark:border-slate-700 shadow-xl"
                       />
                     </div>

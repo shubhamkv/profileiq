@@ -276,7 +276,7 @@ export default function HomePage() {
           </h2>
           <p className="text-xl text-gray-600 dark:text-gray-300 mb-8">
             Join thousands of developers who have enhanced their profiles with
-            ProfileIQ's smart insights
+            ProfileIQ&apos;s smart insights
           </p>
 
           <button

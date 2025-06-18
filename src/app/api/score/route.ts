@@ -58,8 +58,12 @@ export async function POST(req: NextRequest) {
       profile: result.profile,
       githubStats,
     });
-  } catch (err: any) {
-    console.error("Score generation failed:", err.message);
-    return NextResponse.json({ error: err.message }, { status: 500 });
+  } catch (err: unknown) {
+    let errorMessage = "Unknown error";
+    if (err instanceof Error) {
+      errorMessage = err.message;
+    }
+    console.error("Score generation failed:", errorMessage);
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }

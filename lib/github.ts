@@ -1,4 +1,5 @@
 import axios from "axios";
+import { GitHubRepo } from "../types/github";
 
 const BASE_URL = "https://api.github.com";
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
@@ -15,11 +16,15 @@ export async function fetchGitHubUser(username: string) {
   try {
     const res = await axiosInstance.get(`/users/${username}`);
     return res.data;
-  } catch (error: any) {
-    console.error(
-      "Failed to fetch GitHub user",
-      error?.response?.data || error
-    );
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error)) {
+      console.error(
+        "Failed to fetch GitHub user",
+        error?.response?.data || error
+      );
+    } else {
+      console.error("Unknown error while fetching GitHub events", error);
+    }
     throw new Error("Failed to fetch GitHub user");
   }
 }
@@ -30,11 +35,15 @@ export async function fetchGitHubRepos(username: string) {
       `/users/${username}/repos?per_page=100`
     );
     return res.data;
-  } catch (error: any) {
-    console.error(
-      "Failed to fetch GitHub repos",
-      error?.response?.data || error
-    );
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error)) {
+      console.error(
+        "Failed to fetch GitHub repos",
+        error?.response?.data || error
+      );
+    } else {
+      console.error("Unknown error while fetching GitHub events", error);
+    }
     throw new Error("Failed to fetch GitHub repos");
   }
 }
@@ -43,11 +52,15 @@ export async function fetchGitHubEvents(username: string) {
   try {
     const res = await axiosInstance.get(`/users/${username}/events/public`);
     return res.data;
-  } catch (error: any) {
-    console.error(
-      "Failed to fetch GitHub events",
-      error?.response?.data || error
-    );
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error)) {
+      console.error(
+        "Failed to fetch GitHub events",
+        error?.response?.data || error
+      );
+    } else {
+      console.error("Unknown error while fetching GitHub events", error);
+    }
     throw new Error("Failed to fetch GitHub events");
   }
 }
@@ -63,7 +76,7 @@ export async function getGitHubProfileStats(username: string) {
     );
     const repos = reposRes.data;
 
-    const repoStatsPromises = repos.map(async (repo: any) => {
+    const repoStatsPromises = repos.map(async (repo: GitHubRepo) => {
       // Accumulate stars
       totalStars += repo.stargazers_count;
 
