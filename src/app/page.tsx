@@ -21,7 +21,7 @@ export default function HomePage() {
       <section className="max-w-6xl mx-auto px-4 py-16 md:py-24">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           <div className="text-center lg:text-left">
-            <h1 className="text-4xl md:text-6xl font-bold text-gray-900 dark:text-white mb-6 leading-tight">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-white mb-6 leading-snug md:leading-tight">
               Analyze Your
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 to-indigo-600">
                 {" "}
@@ -29,7 +29,7 @@ export default function HomePage() {
               </span>
             </h1>
 
-            <p className="text-xl text-gray-600 dark:text-gray-300 mb-8 max-w-2xl font-mono">
+            <p className="text-base sm:text-lg md:text-xl text-gray-600 dark:text-gray-300 mb-8 max-w-2xl mx-auto lg:mx-0 font-mono">
               Unlock actionable insights into your GitHub profile. Discover
               strengths, identify gaps, and improve your developer score with
               smart analysis.
