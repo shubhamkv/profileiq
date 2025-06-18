@@ -14,20 +14,41 @@ datasource db {
 }
 
 model User {
-  id            String           @id @default(cuid())
+  id            String             @id @default(cuid())
   name          String        
-  email         String           @unique
+  email         String             @unique
   scores        GithubScore[]
-  createdAt     DateTime         @default(now())
+  createdAt     DateTime           @default(now())
 }
 
 model GithubScore {
-  id            String        @id @default(cuid())
+  id            String             @id @default(cuid())
   userId        String
-  user          User          @relation(fields: [userId], references: [id])
+  user          User               @relation(fields: [userId], references: [id])
+  profileId     String             @unique
+  profile       GithubProfile      @relation(fields: [profileId], references: [id])
   score         Int
   good          String[]
   bad           String[]
   insights      String[]
-  createdAt     DateTime      @default(now())
+  createdAt     DateTime           @default(now())
+}
+
+model GithubProfile {
+  id                     String        @id @default(cuid())
+  login                  String
+  name                   String?
+  avatar_url             String?
+  bio                    String?
+  blog                   String?
+  location               String?
+  public_repos           Int?
+  followers              Int?
+  following              Int?
+  totalStars             Int?
+  mostUsedLanguage       String?
+  totalPRs               Int?
+  totalIssues            Int?
+  topLanguages           Json? 
+  score                  GithubScore?   
 }

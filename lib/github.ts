@@ -51,3 +51,66 @@ export async function fetchGitHubEvents(username: string) {
     throw new Error("Failed to fetch GitHub events");
   }
 }
+
+export async function getGitHubProfileStats(username: string) {
+  try {
+    const languageBytes: Record<string, number> = {};
+    let totalStars = 0;
+
+    // Fetch public repos
+    const reposRes = await axiosInstance.get(
+      `/users/${username}/repos?per_page=100`
+    );
+    const repos = reposRes.data;
+
+    const repoStatsPromises = repos.map(async (repo: any) => {
+      // Accumulate stars
+      totalStars += repo.stargazers_count;
+
+      // Get languages
+      try {
+        const langRes = await axiosInstance.get(
+          `/repos/${username}/${repo.name}/languages`
+        );
+        const langData = langRes.data;
+        for (const [lang, bytes] of Object.entries(langData)) {
+          languageBytes[lang] = (languageBytes[lang] || 0) + (bytes as number);
+        }
+      } catch {
+        console.warn(`Lang error on: ${repo.name}`);
+      }
+    });
+
+    await Promise.all(repoStatsPromises);
+
+    const topLanguages = Object.entries(languageBytes)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 5)
+      .map(([name, value]) => ({ name, value }));
+
+    const mostUsedLanguage = topLanguages[0].name;
+
+    // Total PRs
+    const prRes = await axiosInstance.get(
+      `/search/issues?q=type:pr+author:${username}`
+    );
+    const totalPRs = prRes.data.total_count;
+
+    // Total Issues
+    const issueRes = await axiosInstance.get(
+      `/search/issues?q=type:issue+author:${username}`
+    );
+    const totalIssues = issueRes.data.total_count;
+
+    return {
+      topLanguages,
+      totalStars,
+      mostUsedLanguage,
+      totalPRs,
+      totalIssues,
+    };
+  } catch (err) {
+    console.error("GitHub stats error:", err);
+    throw err;
+  }
+}
